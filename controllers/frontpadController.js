@@ -24,8 +24,20 @@ class frontpadController {
       console.log("Payment Method:", pay);
       console.log("Mail:", mail);
 
-      // Проверка на наличие продуктов в массиве
-      const products = product || [];
+      function padProduct(product) {
+        const padValue = (val) => {
+          const n = parseInt(val, 10);
+          return String(n).padStart(5, '0');
+        };
+      
+        if (Array.isArray(product)) {
+          return product.map(padValue);
+        } else {
+          return padValue(product);
+        }
+      }
+      
+      const products = padProduct(product || []);
       const quantities = product_kol || [];
       const modifiers = product_mod || [];
 
