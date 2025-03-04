@@ -18,10 +18,12 @@ const allowedOrigins = [
   "http://81.177.223.206:7878",
   "http://81.177.223.206",
   "http://xn--80ax2d.xn--p1ai",
+  "http://xn--80ax2d.xn--p1ai:7878",
   "https://localhost:3000",
   "https://81.177.223.206:7878",
   "https://81.177.223.206",
   "https://xn--80ax2d.xn--p1ai",
+  "https://xn--80ax2d.xn--p1ai:7878",
 ];
 
 let corsOptions = {
