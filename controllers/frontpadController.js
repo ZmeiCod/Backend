@@ -16,6 +16,7 @@ class frontpadController {
         product_mod,
       } = req.body;
 
+      console.log("Код:", product);
       console.log("Street:", street);
       console.log("Name:", name);
       console.log("Phone:", phone);
