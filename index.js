@@ -45,7 +45,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.static(path.resolve(__dirname, "static")));
-app.use("/static", express.static(path.resolve(__dirname, "static")));
+app.use("/api/static", express.static(path.resolve(__dirname, "static")));
 app.use(fileUpload({}));
 app.use("/api", router);
 app.use("/api/frontpad", frontpadRouter);
