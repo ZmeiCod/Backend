@@ -24,6 +24,8 @@ const allowedOrigins = [
   "https://81.177.223.206",
   "https://xn--80ax2d.xn--p1ai",
   "https://xn--80ax2d.xn--p1ai:7878",
+  "https://top-fwz1.mail.ru",
+  "https://mc.yandex.ru/metrika",
 ];
 
 let corsOptions = {
