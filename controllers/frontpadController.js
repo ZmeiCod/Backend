@@ -8,36 +8,21 @@ class frontpadController {
         street,
         name,
         phone,
-        descr,
+        descr = "",
         pay,
-        mail,
-        product,
-        product_kol,
-        product_mod,
+        mail = "",
+        product = [],
+        product_kol = [],
+        product_mod = [],
       } = req.body;
 
-      console.log("Код:", product);
-      console.log("Street:", street);
-      console.log("Name:", name);
-      console.log("Phone:", phone);
-      console.log("Description:", descr);
-      console.log("Payment Method:", pay);
-      console.log("Mail:", mail);
+      const padProduct = (items) => {
+        return Array.isArray(items)
+          ? items.map((val) => String(parseInt(val, 10)).padStart(5, "0"))
+          : [String(parseInt(items, 10)).padStart(5, "0")];
+      };
 
-      function padProduct(product) {
-        const padValue = (val) => {
-          const n = parseInt(val, 10);
-          return String(n).padStart(5, '0');
-        };
-      
-        if (Array.isArray(product)) {
-          return product.map(padValue);
-        } else {
-          return padValue(product);
-        }
-      }
-      
-      const products = padProduct(product || []);
+      const products = padProduct(product);
       const quantities = product_kol || [];
       const modifiers = product_mod || [];
 
@@ -45,32 +30,37 @@ class frontpadController {
 
       const params = {
         secret: process.env.API_FRONTPAD,
-        street: street,
-        name: name,
-        phone: phone,
-        descr: descr ? descr : "",
-        pay: pay,
-        mail: mail ? mail : "",
+        street,
+        name,
+        phone,
+        descr,
+        pay,
+        mail,
       };
 
-      console.log(params);
+      console.log(
+        `[${new Date().toISOString()}] Отправка данных клиента в Frontpad: \n`,
+        JSON.stringify({...params, secret: undefined}, null, 2)
+      );
 
       // Заполняем formData основными параметрами
-      for (const key in params) {
-        formData.append(key, params[key]);
-      }
+      Object.entries(params).forEach(([key, value]) =>
+        formData.append(key, value)
+      );
 
-      // Добавляем продукты и их характеристики в formData
       products.forEach((productItem, index) => {
         formData.append(`product[${index}]`, productItem);
-        formData.append(`product_kol[${index}]`, quantities[index] || 0); // Если количество не указано, ставим 0
-
+        formData.append(`product_kol[${index}]`, quantities[index] || 0);
         if (modifiers[index] !== undefined) {
           formData.append(`product_mod[${index}]`, modifiers[index]);
         }
       });
 
-      // Отправляем POST-запрос на новый адрес
+      console.log(
+        `[${new Date().toISOString()}] Отправка продуктов в Frontpad: \n`,
+        JSON.stringify(products, null, 2)
+      );
+
       const response = await fetch(
         "https://app.frontpad.ru/api/index.php?new_order",
         {
@@ -79,15 +69,78 @@ class frontpadController {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.statusText}`);
+      let responseData;
+      try {
+        responseData = await response.json(); // Используем response.json() для парсинга
+      } catch (error) {
+        console.error(
+          `[${new Date().toISOString()}] Ошибка парсинга JSON из API Frontpad:`,
+          error
+        );
+        throw new Error(`Ошибка обработки ответа API: ${error.message}`);
       }
 
-      const result = await response.text();
-      console.log("Response from API:", result);
+      // Проверяем, содержит ли ответ ключ "result"
+      if (!responseData.result) {
+        console.error(
+          `[${new Date().toISOString()}] Неизвестный формат ответа от API Frontpad:`,
+          responseData
+        );
+        return res
+          .status(500)
+          .json({
+            message: "Неожиданный ответ от API Frontpad",
+            response: responseData,
+          });
+      }
 
-      res.status(200).json({ message: "Данные получены и обработаны" });
+      // Успешный ответ API
+      if (responseData.result === "success") {
+        console.log(`[${new Date().toISOString()}] Успешный ответ от API Frontpad: 
+          - Order ID: ${responseData.order_id} 
+          - Order Number: ${responseData.order_number || "Не указан"}`);
+
+        // Проверяем, есть ли предупреждения
+        if (responseData.warnings) {
+          console.warn(
+            `[${new Date().toISOString()}] Предупреждения от API Frontpad:`,
+            JSON.stringify(responseData.warnings, null, 2)
+          );
+        }
+
+        return res.status(200).json({
+          message: "Данные успешно отправлены в Frontpad",
+          response: responseData,
+        });
+      }
+
+      // Ошибка API
+      if (responseData.result === "error") {
+        console.error(
+          `[${new Date().toISOString()}] Ошибка API Frontpad: ${
+            responseData.error
+          }`
+        );
+
+        return res.status(400).json({
+          message: "Ошибка при отправке в Frontpad",
+          error: responseData.error,
+        });
+      }
+
+      // Если ответ неожиданный
+      console.error(
+        `[${new Date().toISOString()}] Неизвестный формат ответа от API Frontpad:`,
+        responseData
+      );
+      res
+        .status(500)
+        .json({
+          message: "Неожиданный ответ от API Frontpad",
+          response: responseData,
+        });
     } catch (e) {
+      console.error(`[${new Date().toISOString()}] Ошибка:`, e.message);
       next(ApiError.badRequest(e.message));
     }
   }
