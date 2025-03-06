@@ -79,7 +79,6 @@ class frontpadController {
         }
       );
 
-      // Обработка ответа сервера
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }

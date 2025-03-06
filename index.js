@@ -19,13 +19,13 @@ const allowedOrigins = [
   "http://81.177.223.206",
   "http://xn--80ax2d.xn--p1ai",
   "http://xn--80ax2d.xn--p1ai:7878",
+  "https://app.frontpad.ru",
   "https://localhost:3000",
   "https://81.177.223.206:7878",
   "https://81.177.223.206",
   "https://xn--80ax2d.xn--p1ai",
   "https://xn--80ax2d.xn--p1ai:7878",
-  "https://top-fwz1.mail.ru/js/code.js",
-  "https://mc.yandex.ru/metrika/tag.js",
+  "https://app.frontpad.ru",
 ];
 
 let corsOptions = {
