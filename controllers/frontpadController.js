@@ -10,7 +10,7 @@ class frontpadController {
         phone,
         descr = "",
         pay,
-        mail = "",
+        // mail = "",
         product = [],
         product_kol = [],
         product_mod = [],
@@ -22,25 +22,29 @@ class frontpadController {
           : [String(parseInt(items, 10)).padStart(5, "0")];
       };
 
+      const padPhone = () => {
+        return phone.replace(/[\s\(\)\-\+]/g, "");
+      };
+      console.log(padPhone(phone));
       const products = padProduct(product);
       const quantities = product_kol || [];
       const modifiers = product_mod || [];
 
-      const formData = new FormData(); // Создаем экземпляр FormData
+      const formData = new FormData();
 
       const params = {
         secret: process.env.API_FRONTPAD,
         street,
         name,
-        phone,
+        phone: padPhone(),
         descr,
         pay,
-        mail,
+        // mail,
       };
 
       console.log(
         `[${new Date().toISOString()}] Отправка данных клиента в Frontpad: \n`,
-        JSON.stringify({...params, secret: undefined}, null, 2)
+        JSON.stringify({ ...params, secret: undefined }, null, 2)
       );
 
       // Заполняем formData основными параметрами
@@ -86,12 +90,10 @@ class frontpadController {
           `[${new Date().toISOString()}] Неизвестный формат ответа от API Frontpad:`,
           responseData
         );
-        return res
-          .status(500)
-          .json({
-            message: "Неожиданный ответ от API Frontpad",
-            response: responseData,
-          });
+        return res.status(500).json({
+          message: "Неожиданный ответ от API Frontpad",
+          response: responseData,
+        });
       }
 
       // Успешный ответ API
@@ -133,12 +135,10 @@ class frontpadController {
         `[${new Date().toISOString()}] Неизвестный формат ответа от API Frontpad:`,
         responseData
       );
-      res
-        .status(500)
-        .json({
-          message: "Неожиданный ответ от API Frontpad",
-          response: responseData,
-        });
+      res.status(500).json({
+        message: "Неожиданный ответ от API Frontpad",
+        response: responseData,
+      });
     } catch (e) {
       console.error(`[${new Date().toISOString()}] Ошибка:`, e.message);
       next(ApiError.badRequest(e.message));
