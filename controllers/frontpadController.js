@@ -10,7 +10,6 @@ class frontpadController {
         phone,
         descr = "",
         pay,
-        // mail = "",
         product = [],
         product_kol = [],
         product_mod = [],
@@ -25,7 +24,7 @@ class frontpadController {
       const padPhone = () => {
         return phone.replace(/[\s\(\)\-\+]/g, "");
       };
-      console.log(padPhone(phone));
+
       const products = padProduct(product);
       const quantities = product_kol || [];
       const modifiers = product_mod || [];
@@ -39,7 +38,6 @@ class frontpadController {
         phone: padPhone(),
         descr,
         pay,
-        // mail,
       };
 
       console.log(
