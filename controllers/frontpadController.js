@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
 const FormData = require("form-data");
 const ApiError = require("../error/ApiError");
+
 class frontpadController {
   async create(req, res, next) {
     try {
@@ -73,7 +74,7 @@ class frontpadController {
 
       let responseData;
       try {
-        responseData = await response.json(); // Используем response.json() для парсинга
+        responseData = await response.json();
       } catch (error) {
         console.error(
           `[${new Date().toISOString()}] Ошибка парсинга JSON из API Frontpad:`,

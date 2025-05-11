@@ -1,8 +1,8 @@
-const { v4: uuid } = require("uuid");
 const fs = require("fs");
 const path = require("path");
-const { Category } = require("../models/models");
+const { v4: uuid } = require("uuid");
 const ApiError = require("../error/ApiError");
+const { Category } = require("../models/models");
 
 class categoryController {
   async create(req, res, next) {

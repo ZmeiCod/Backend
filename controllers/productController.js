@@ -1,8 +1,8 @@
-const { v4: uuid } = require("uuid");
-const path = require("path");
 const fs = require("fs");
-const { Product } = require("../models/models");
+const path = require("path");
+const { v4: uuid } = require("uuid");
 const ApiError = require("../error/ApiError");
+const { Product } = require("../models/models");
 
 class productController {
   async create(req, res, next) {
@@ -78,19 +78,19 @@ class productController {
       price40,
       weight40,
     } = req.body;
-  
+
     let image = null;
     if (req.files && req.files.image) {
       image = req.files.image;
     }
-  
+
     try {
       const product = await Product.findOne({ where: { id } });
-  
+
       if (!product) {
         return res.status(404).json({ message: "Продукт не найден" });
       }
-  
+
       if (image) {
         const oldImagePath = path.resolve(
           __dirname,
@@ -98,7 +98,7 @@ class productController {
           "static",
           product.image
         );
-  
+
         fs.unlink(oldImagePath, (err) => {
           if (err) {
             console.error("Ошибка при удалении старого изображения: ", err);
@@ -106,7 +106,7 @@ class productController {
             console.log("Старое изображение успешно удалено");
           }
         });
-  
+
         const fileName = uuid() + ".jpg";
         await image.mv(path.resolve(__dirname, "..", "static", fileName));
         product.image = fileName;
@@ -121,11 +121,11 @@ class productController {
       product.article40 = article40 || product.article40;
       product.price40 = price40 || product.price40;
       product.weight40 = weight40 || product.weight40;
-  
+
       console.log("Обновленный объект продукта: ", product);
-  
+
       await product.save();
-  
+
       return res.status(200).json(product);
     } catch (error) {
       console.error("Ошибка при обновлении продукта", error);

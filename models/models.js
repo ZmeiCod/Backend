@@ -6,19 +6,21 @@ const User = sequelize.define("user", {
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
   role: { type: DataTypes.STRING, defaultValue: "USER" },
+  refreshToken: { type: DataTypes.STRING },
 });
 
 const Carousel = sequelize.define('carousel', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   image: { type: DataTypes.STRING, allowNull: false },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
+  smallImage: { type: DataTypes.STRING, allowNull: false },
 })
 
 const Product = sequelize.define("product", {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   article: { type: DataTypes.INTEGER, unique: true, allowNull: false },
   image: { type: DataTypes.STRING, allowNull: false },
-  name: { type: DataTypes.STRING, unique: true, allowNull: false },
+  name: { type: DataTypes.STRING, allowNull: false},
   price: { type: DataTypes.INTEGER, allowNull: false },
   description: { type: DataTypes.STRING, allowNull: false },
   weight: { type: DataTypes.INTEGER, allowNull: false },
