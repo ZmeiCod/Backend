@@ -7,14 +7,5 @@
     "dialect": "postgres",
     "port": 5432,
     "logging": true
-  },
-  "production": {
-    "username": "Kain",
-    "password": "CUVXxkLQ0thQ",
-    "database": "Maya",
-    "host": "192.168.1.112",
-    "dialect": "postgres",
-    "port": 5432,
-    "logging": true
   }
 }
