@@ -20,17 +20,16 @@ const allowedOrigins = [
   "https://localhost:3000",
   "http://localhost:5173",
   "https://localhost:5173",
-  "https://app.frontpad.ru",
-
-  "http://81.177.223.206",
   "http://81.177.223.206:7878",
-
+  "http://81.177.223.206",
+  "http://xn--80ax2d.xn--p1ai",
+  "http://xn--80ax2d.xn--p1ai:7878",
+  "https://app.frontpad.ru",
+  "https://81.177.223.206:7878",
+  "https://81.177.223.206",
   "https://xn--80ax2d.xn--p1ai",
   "https://xn--80ax2d.xn--p1ai:7878",
-  "https://xn--80ax2d.xn--p1ai/api",
-  "https://xn--80ax2d.xn--p1ai/api/carousel",
-  "https://xn--80ax2d.xn--p1ai/api/category",
-  "https://xn--80ax2d.xn--p1ai/api/product",
+  "https://app.frontpad.ru",
 ];
 
 let corsOptions = {
@@ -50,7 +49,7 @@ app.enable('trust proxy')
 app.use(cookieParser())
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' })); // Увеличиваем лимит на размер JSON
-app.use(express.urlencoded({ limit: '10mb', extended: true }));// Увеличиваем лимит на размер URL-кодированных данных
+app.use(express.urlencoded({ limit: '10mb', extended: true })); // Увеличиваем лимит на размер URL-кодированных данных
 app.use("/api/static", express.static(path.resolve(__dirname, "static")));
 app.use(fileUpload({}));
 app.use("/api", router);
